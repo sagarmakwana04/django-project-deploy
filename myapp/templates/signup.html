@@ -1,0 +1,105 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	
+  </head>
+  <body class="goto-here">
+     
+    <!-- END nav -->
+
+    <div class="hero-wrap hero-bread" style="background-image: url('{% static 'images/bg_6.jpg' %}');">
+      <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+          <div class="col-md-9 ftco-animate text-center">
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Sign Up</span></p>
+            <h1 class="mb-0 bread">Sign Up</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="ftco-section contact-section bg-light">
+      <div class="container">
+        <div class="row block-12">
+          <div class="col-md-12 order-md-last d-flex">
+			{% if msg %}
+			<b style="color: blue;">{{msg}}</b>
+			{% endif %}
+            <form class="bg-white p-5 contact-form" method="post" action="{% url 'signup' %}" enctype="multipart/form-data">
+				    {% csrf_token %}
+              <div class="form-group">
+                <select name="usertype" class="form-control">
+                  <option>---Select User Type---</option>
+                  <option value="buyer">Buyer</option>
+                  <option value="seller">Seller</option>
+                </select>
+              </div>                          
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Your First Name" name="fname">
+              </div>
+			        <div class="form-group">
+                <input type="text" class="form-control" placeholder="Your Last Name" name="lname">
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" id="email" placeholder="Your Email" name="email">
+                <span id="email_error"></span>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" placeholder="Your Mobile" name="mobile">
+              </div>
+              <div class="form-group">
+                <textarea name="address" cols="30" rows="7" class="form-control" placeholder="address"></textarea>
+              </div>
+			        <div class="form-group">
+                <input type="password" class="form-control" placeholder="Your Password" name="password">
+              </div>
+			        <div class="form-group">
+                <input type="password" class="form-control" placeholder="Your Confirm Password" name="cpassword">
+              </div>
+              <div class="form-group">
+                Profile Pic:<input type="file" class="form-control" name="profile_pic">
+              </div>
+              <div class="form-group">
+                <input type="submit" value="Sign Up" class="btn btn-primary py-3 px-5">
+              </div>
+            </form>
+          
+          </div>
+
+          <div class="col-md-6 d-flex">
+          	<div id="map" class="bg-white"></div>
+          </div>
+        </div>
+      </div>
+    </section> 
+
+    <script>
+      $("#email").change(function(){
+        var email=$(this).val();
+
+        $.ajax({
+          url: '/ajax/validate_email/',
+          data: {
+            'email': email
+          },
+          dataType: 'json',
+          success: function (data) {
+            if (data.is_taken) {
+              /*document.getElementById("email").style.border="5px solid red";*/
+              document.getElementById("email_error").innerHTML="This Email ID Is Already Registered"
+            }else{
+              document.getElementById("email_error").innerHTML="";
+            }
+          }
+        });
+      });
+
+    </script>
+
+  </body>
+</html>
+{% endblock %}
